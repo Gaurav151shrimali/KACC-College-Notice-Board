@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KACC College Notice Board</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f6fb;
+      color: #202b3c;
+    }
+
+    header {
+      background: #123d70;
+      color: white;
+      text-align: center;
+      padding: 28px 15px;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: 25px;
+    }
+
+    header p {
+      margin: 5px 0;
+      font-size: 15px;
+    }
+
+    nav {
+      background: white;
+      padding: 14px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    nav button {
+      padding: 9px 18px;
+      margin: 4px;
+      border: 1px solid #123d70;
+      border-radius: 6px;
+      background: white;
+      color: #123d70;
+      cursor: pointer;
+    }
+
+    nav button.active {
+      background: #123d70;
+      color: white;
+    }
+
+    main {
+      max-width: 950px;
+      margin: 28px auto;
+      padding: 0 15px;
+    }
+
+    .notice-heading {
+      font-size: 23px;
+      margin-bottom: 18px;
+    }
+
+    .empty-message {
+      background: white;
+      padding: 35px 20px;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px #0000000d;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 20px;
+      background: #123d70;
+      color: white;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>શ્રીમતી કે. કે. શાહ આર્ટ્સ અને શ્રીમતી એલ. બી. ગુંજરીયા કોમર્સ કોલેજ</h1>
+    <p>થરા</p>
+    <p>KACC College - Official Notice Board</p>
+  </header>
+
+  <nav>
+    <button class="active" id="guBtn" onclick="setLanguage('gu')">
+      ગુજરાતી
+    </button>
+
+    <button id="enBtn" onclick="setLanguage('en')">
+      English
+    </button>
+  </nav>
+
+  <main>
+    <h2 class="notice-heading" id="pageHeading">
+      કોલેજની સૂચનાઓ
+    </h2>
+
+    <section class="empty-message">
+      <h3 id="emptyTitle">સૂચનાઓ ટૂંક સમયમાં અહીં મૂકવામાં આવશે.</h3>
+      <p id="emptyText">
+        કોલેજની નવીનતમ સૂચનાઓ માટે આ પેજની મુલાકાત લેતા રહો.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© Shrimati K. K. Shah Arts & Shrimati L. B. Gunjariya Commerce College, Thara</p>
+  </footer>
+
+  <script>
+    function setLanguage(language) {
+      const guBtn = document.getElementById("guBtn");
+      const enBtn = document.getElementById("enBtn");
+
+      if (language === "en") {
+        document.getElementById("pageHeading").textContent = "College Notices";
+        document.getElementById("emptyTitle").textContent =
+          "Notices will be published here soon.";
+        document.getElementById("emptyText").textContent =
+          "Please visit this page regularly for the latest college notices.";
+
+        enBtn.classList.add("active");
+        guBtn.classList.remove("active");
+      } else {
+        document.getElementById("pageHeading").textContent = "કોલેજની સૂચનાઓ";
+        document.getElementById("emptyTitle").textContent =
+          "સૂચનાઓ ટૂંક સમયમાં અહીં મૂકવામાં આવશે.";
+        document.getElementById("emptyText").textContent =
+          "કોલેજની નવીનતમ સૂચનાઓ માટે આ પેજની મુલાકાત લેતા રહો.";
+
+        guBtn.classList.add("active");
+        enBtn.classList.remove("active");
+      }
+    }
+  </script>
+
+</body>
+</html>
