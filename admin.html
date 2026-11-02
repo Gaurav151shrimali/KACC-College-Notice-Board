@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KACC Admin Panel</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f4f9;
+      color: #243247;
+    }
+    header {
+      background: #123d70;
+      color: white;
+      padding: 22px 15px;
+      text-align: center;
+    }
+    header h2 { margin: 0 0 8px; }
+    main {
+      max-width: 600px;
+      margin: 35px auto;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 3px 15px #00000012;
+    }
+    input {
+      width: 100%;
+      padding: 13px;
+      margin: 9px 0 16px;
+      border: 1px solid #ccd3df;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    button {
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 6px;
+      background: #123d70;
+      color: white;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    button:disabled { opacity: .6; cursor: wait; }
+    #message { margin-top: 15px; color: #b42318; }
+    #dashboard { display: none; }
+    .welcome {
+      background: #e8f2ff;
+      padding: 18px;
+      border-radius: 8px;
+      margin: 18px 0;
+    }
+    .logout { background: #a52b2b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>KACC College Admin Panel</h2>
+    <div>શ્રીમતી કે. કે. શાહ આર્ટ્સ અને શ્રીમતી એલ. બી. ગુંજરીયા કોમર્સ કોલેજ, થરા</div>
+  </header>
+
+  <main>
+    <section class="card" id="loginBox">
+      <h2>Admin Login</h2>
+      <p>માત્ર અધિકૃત Admin જ Login કરી શકશે.</p>
+
+      <form id="loginForm">
+        <label for="email">Admin Email</label>
+        <input id="email" type="email" required autocomplete="username"
+          placeholder="Admin Email">
+
+        <label for="password">Password</label>
+        <input id="password" type="password" required
+          autocomplete="current-password" placeholder="Password">
+
+        <button id="loginButton" type="submit">Login</button>
+      </form>
+      <div id="message" role="status"></div>
+    </section>
+
+    <section class="card" id="dashboard">
+      <h2>Admin Dashboard</h2>
+      <div class="welcome">
+        <h3>સ્વાગત છે!</h3>
+        <p id="adminEmail"></p>
+        <p>તમારું Admin Login સફળ થયું છે.</p>
+      </div>
+      <p>Notice Managementની સુવિધા આગળના તબક્કામાં ઉમેરવામાં આવશે.</p>
+      <button class="logout" id="logoutButton">Logout</button>
+    </section>
+  </main>
+
+  <script type="module">
+    import { auth, db } from "./firebase-config.js";
+    import {
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import {
+      doc, getDoc
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    const loginBox = document.getElementById("loginBox");
+    const dashboard = document.getElementById("dashboard");
+    const message = document.getElementById("message");
+    const loginButton = document.getElementById("loginButton");
+
+    async function checkAdmin(user) {
+      try {
+        const adminRef = doc(db, "admins", user.uid);
+        const adminSnap = await getDoc(adminRef);
+
+        if (!adminSnap.exists()) {
+          throw new Error("આ Accountને Admin પરવાનગી આપવામાં આવી નથી.");
+        }
+
+        const role = adminSnap.data().role;
+        if (!["superadmin", "admin"].includes(role)) {
+          throw new Error("આ Accountને Admin પરવાનગી આપવામાં આવી નથી.");
+        }
+
+        loginBox.style.display = "none";
+        dashboard.style.display = "block";
+        document.getElementById("adminEmail").textContent = user.email || "";
+        message.textContent = "";
+      } catch (error) {
+        await signOut(auth);
+        loginBox.style.display = "block";
+        dashboard.style.display = "none";
+
+        if (error.code === "permission-denied") {
+          message.textContent =
+            "Firestore સુરક્ષા નિયમો હજી ગોઠવવાના બાકી છે. કૃપા કરીને પછી પ્રયાસ કરો.";
+        } else {
+          message.textContent = error.message || "Admin ચકાસણી થઈ શકી નથી.";
+        }
+      }
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      message.textContent = "";
+      loginButton.disabled = true;
+      loginButton.textContent = "Checking...";
+
+      try {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (error) {
+        message.textContent = "Login નિષ્ફળ: Email અથવા Password તપાસો.";
+      } finally {
+        loginButton.disabled = false;
+        loginButton.textContent = "Login";
+      }
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        checkAdmin(user);
+      } else {
+        loginBox.style.display = "block";
+        dashboard.style.display = "none";
+      }
+    });
+
+    document.getElementById("logoutButton").addEventListener("click", async () => {
+      await signOut(auth);
+    });
+  </script>
+</body>
+</html>
