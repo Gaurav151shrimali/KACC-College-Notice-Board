@@ -2,179 +2,403 @@
 <!DOCTYPE html>
 <html lang="gu">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KACC Admin Panel</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f1f4f9;
-      color: #243247;
-    }
-    header {
-      background: #123d70;
-      color: white;
-      padding: 22px 15px;
-      text-align: center;
-    }
-    header h2 { margin: 0 0 8px; }
-    main {
-      max-width: 600px;
-      margin: 35px auto;
-      padding: 20px;
-    }
-    .card {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 3px 15px #00000012;
-    }
-    input {
-      width: 100%;
-      padding: 13px;
-      margin: 9px 0 16px;
-      border: 1px solid #ccd3df;
-      border-radius: 6px;
-      font-size: 16px;
-    }
-    button {
-      padding: 12px 20px;
-      border: 0;
-      border-radius: 6px;
-      background: #123d70;
-      color: white;
-      cursor: pointer;
-      font-size: 15px;
-    }
-    button:disabled { opacity: .6; cursor: wait; }
-    #message { margin-top: 15px; color: #b42318; }
-    #dashboard { display: none; }
-    .welcome {
-      background: #e8f2ff;
-      padding: 18px;
-      border-radius: 8px;
-      margin: 18px 0;
-    }
-    .logout { background: #a52b2b; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KACC Admin Panel</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f4f9;color:#243247}
+header{background:#123d70;color:white;padding:22px 15px;text-align:center}
+header h2{margin:0 0 8px}
+main{max-width:950px;margin:25px auto;padding:15px}
+.card{background:white;padding:22px;margin-bottom:20px;border-radius:12px;box-shadow:0 3px 15px #00000012}
+input,textarea,select{width:100%;padding:12px;margin:8px 0 15px;border:1px solid #ccd3df;border-radius:6px;font-size:15px}
+textarea{min-height:100px;resize:vertical}
+button{padding:11px 17px;border:0;border-radius:6px;background:#123d70;color:white;cursor:pointer;font-size:14px;margin:4px}
+button:disabled{opacity:.6;cursor:wait}
+.logout,.delete{background:#a52b2b}
+.edit{background:#287447}
+.notice{border:1px solid #dce2eb;padding:16px;border-radius:9px;margin:12px 0}
+.notice h3{margin:5px 0}
+.status{font-size:13px;font-weight:bold}
+#loginBox{max-width:500px;margin:35px auto}
+#dashboard{display:none}
+#message{color:#b42318;margin-top:12px}
+#noticeMessage{margin:12px 0;color:#176b3a}
+.small{font-size:13px;color:#65738a}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.checkbox{width:auto;margin-right:8px}
+@media(max-width:600px){.row{grid-template-columns:1fr}main{padding:10px}.card{padding:16px}}
+</style>
 </head>
+
 <body>
-  <header>
-    <h2>KACC College Admin Panel</h2>
-    <div>શ્રીમતી કે. કે. શાહ આર્ટ્સ અને શ્રીમતી એલ. બી. ગુંજરીયા કોમર્સ કોલેજ, થરા</div>
-  </header>
+<header>
+<h2>KACC College Admin Panel</h2>
+<div>શ્રીમતી કે. કે. શાહ આર્ટ્સ અને શ્રીમતી એલ. બી. ગુંજરીયા કોમર્સ કોલેજ, થરા</div>
+</header>
 
-  <main>
-    <section class="card" id="loginBox">
-      <h2>Admin Login</h2>
-      <p>માત્ર અધિકૃત Admin જ Login કરી શકશે.</p>
+<main>
+<section class="card" id="loginBox">
+<h2>Admin Login</h2>
+<p>માત્ર અધિકૃત Admin જ Login કરી શકશે.</p>
 
-      <form id="loginForm">
-        <label for="email">Admin Email</label>
-        <input id="email" type="email" required autocomplete="username"
-          placeholder="Admin Email">
+<form id="loginForm">
+<label>Admin Email</label>
+<input id="email" type="email" required autocomplete="username" placeholder="Admin Email">
 
-        <label for="password">Password</label>
-        <input id="password" type="password" required
-          autocomplete="current-password" placeholder="Password">
+<label>Password</label>
+<input id="password" type="password" required autocomplete="current-password" placeholder="Password">
 
-        <button id="loginButton" type="submit">Login</button>
-      </form>
-      <div id="message" role="status"></div>
-    </section>
+<button id="loginButton" type="submit">Login</button>
+</form>
+<div id="message" role="status"></div>
+</section>
 
-    <section class="card" id="dashboard">
-      <h2>Admin Dashboard</h2>
-      <div class="welcome">
-        <h3>સ્વાગત છે!</h3>
-        <p id="adminEmail"></p>
-        <p>તમારું Admin Login સફળ થયું છે.</p>
-      </div>
-      <p>Notice Managementની સુવિધા આગળના તબક્કામાં ઉમેરવામાં આવશે.</p>
-      <button class="logout" id="logoutButton">Logout</button>
-    </section>
-  </main>
+<section id="dashboard">
+<div class="card">
+<h2>Admin Dashboard</h2>
+<p>સ્વાગત છે!</p>
+<p id="adminEmail"></p>
+<button class="logout" id="logoutButton">Logout</button>
+</div>
 
-  <script type="module">
-    import { auth, db } from "./firebase-config.js";
-    import {
-      signInWithEmailAndPassword,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-    import {
-      doc, getDoc
-    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+<div class="card">
+<h2 id="formHeading">નવી Notice ઉમેરો</h2>
 
-    const loginBox = document.getElementById("loginBox");
-    const dashboard = document.getElementById("dashboard");
-    const message = document.getElementById("message");
-    const loginButton = document.getElementById("loginButton");
+<form id="noticeForm">
+<input type="hidden" id="noticeId">
 
-    async function checkAdmin(user) {
-      try {
-        const adminRef = doc(db, "admins", user.uid);
-        const adminSnap = await getDoc(adminRef);
+<label>Notice Title - ગુજરાતી</label>
+<input id="titleGu" required maxlength="200" placeholder="ગુજરાતીમાં શીર્ષક">
 
-        if (!adminSnap.exists()) {
-          throw new Error("આ Accountને Admin પરવાનગી આપવામાં આવી નથી.");
-        }
+<label>Notice Title - English</label>
+<input id="titleEn" maxlength="200" placeholder="Notice Title in English">
 
-        const role = adminSnap.data().role;
-        if (!["superadmin", "admin"].includes(role)) {
-          throw new Error("આ Accountને Admin પરવાનગી આપવામાં આવી નથી.");
-        }
+<label>વિગતો - ગુજરાતી</label>
+<textarea id="descriptionGu" required maxlength="10000" placeholder="ગુજરાતીમાં Noticeની વિગતો"></textarea>
 
-        loginBox.style.display = "none";
-        dashboard.style.display = "block";
-        document.getElementById("adminEmail").textContent = user.email || "";
-        message.textContent = "";
-      } catch (error) {
-        await signOut(auth);
-        loginBox.style.display = "block";
-        dashboard.style.display = "none";
+<label>Description - English</label>
+<textarea id="descriptionEn" maxlength="10000" placeholder="Notice details in English"></textarea>
 
-        if (error.code === "permission-denied") {
-          message.textContent =
-            "Firestore સુરક્ષા નિયમો હજી ગોઠવવાના બાકી છે. કૃપા કરીને પછી પ્રયાસ કરો.";
-        } else {
-          message.textContent = error.message || "Admin ચકાસણી થઈ શકી નથી.";
-        }
-      }
-    }
+<div class="row">
+<div>
+<label>Category</label>
+<select id="category">
+<option value="General">General</option>
+<option value="Examination">Examination</option>
+<option value="Admission">Admission</option>
+<option value="Event">Event</option>
+<option value="Holiday">Holiday</option>
+<option value="Other">Other</option>
+</select>
+</div>
 
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      message.textContent = "";
-      loginButton.disabled = true;
-      loginButton.textContent = "Checking...";
+<div>
+<label>Status</label>
+<select id="status">
+<option value="draft">Draft</option>
+<option value="published">Publish</option>
+</select>
+</div>
+</div>
 
-      try {
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (error) {
-        message.textContent = "Login નિષ્ફળ: Email અથવા Password તપાસો.";
-      } finally {
-        loginButton.disabled = false;
-        loginButton.textContent = "Login";
-      }
-    });
+<div class="row">
+<div>
+<label>Publish Date</label>
+<input id="publishDate" type="date">
+</div>
+<div>
+<label>Expiry Date</label>
+<input id="expiryDate" type="date">
+</div>
+</div>
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        checkAdmin(user);
-      } else {
-        loginBox.style.display = "block";
-        dashboard.style.display = "none";
-      }
-    });
+<label>
+<input class="checkbox" id="important" type="checkbox">
+Important Notice તરીકે Highlight કરો
+</label>
 
-    document.getElementById("logoutButton").addEventListener("click", async () => {
-      await signOut(auth);
-    });
-  </script>
+<label>PDF / Document Link (વૈકલ્પિક)</label>
+<input id="pdfUrl" type="url" placeholder="https://...">
+
+<p class="small">PDF Link માટે HTTPS URL વાપરો. આ તબક્કે PDF સીધી Upload થતી નથી.</p>
+
+<button id="saveButton" type="submit">Notice Save કરો</button>
+<button type="button" id="cancelEdit" style="display:none">Cancel Edit</button>
+<div id="noticeMessage" role="status"></div>
+</form>
+</div>
+
+<div class="card">
+<h2>તમામ Notices</h2>
+<button id="refreshButton">Refresh Notices</button>
+<div id="noticeList">Notices લોડ થઈ રહી છે...</div>
+</div>
+</section>
+</main>
+
+<script type="module">
+import {auth,db} from "./firebase-config.js";
+
+import {
+signInWithEmailAndPassword,
+onAuthStateChanged,
+signOut
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+import {
+collection,doc,getDoc,getDocs,addDoc,updateDoc,deleteDoc,
+serverTimestamp
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+const loginBox=document.getElementById("loginBox");
+const dashboard=document.getElementById("dashboard");
+const message=document.getElementById("message");
+const noticeMessage=document.getElementById("noticeMessage");
+const noticeList=document.getElementById("noticeList");
+const loginButton=document.getElementById("loginButton");
+
+let currentUser=null;
+
+function showMessage(text){
+noticeMessage.textContent=text;
+}
+
+async function checkAdmin(user){
+try{
+const adminRef=doc(db,"admins",user.uid);
+const adminSnap=await getDoc(adminRef);
+
+if(!adminSnap.exists()) throw new Error("આ Accountને Admin પરવાનગી નથી.");
+
+const role=adminSnap.data().role;
+if(!["superadmin","admin"].includes(role)){
+throw new Error("આ Accountને Admin પરવાનગી નથી.");
+}
+
+currentUser=user;
+loginBox.style.display="none";
+dashboard.style.display="block";
+document.getElementById("adminEmail").textContent=user.email||"";
+message.textContent="";
+await loadNotices();
+
+}catch(error){
+await signOut(auth);
+loginBox.style.display="block";
+dashboard.style.display="none";
+message.textContent=error.code==="permission-denied"
+?"Firestore Permission Error. Security Rules તપાસો."
+:error.message||"Admin ચકાસણી નિષ્ફળ.";
+}
+}
+
+document.getElementById("loginForm").addEventListener("submit",async(e)=>{
+e.preventDefault();
+message.textContent="";
+loginButton.disabled=true;
+loginButton.textContent="Checking...";
+
+try{
+await signInWithEmailAndPassword(
+auth,
+document.getElementById("email").value.trim(),
+document.getElementById("password").value
+);
+}catch(error){
+message.textContent="Login નિષ્ફળ. Email અને Password તપાસો.";
+}finally{
+loginButton.disabled=false;
+loginButton.textContent="Login";
+}
+});
+
+onAuthStateChanged(auth,user=>{
+if(user) checkAdmin(user);
+else{
+currentUser=null;
+loginBox.style.display="block";
+dashboard.style.display="none";
+}
+});
+
+document.getElementById("logoutButton").addEventListener("click",()=>signOut(auth));
+
+function validPdfUrl(value){
+if(!value)return true;
+try{
+return new URL(value).protocol==="https:";
+}catch{
+return false;
+}
+}
+
+document.getElementById("noticeForm").addEventListener("submit",async(e)=>{
+e.preventDefault();
+if(!currentUser)return;
+
+const id=document.getElementById("noticeId").value;
+const pdfUrl=document.getElementById("pdfUrl").value.trim();
+
+if(!validPdfUrl(pdfUrl)){
+showMessage("PDF Link માન્ય HTTPS URL હોવી જોઈએ.");
+return;
+}
+
+const publishDate=document.getElementById("publishDate").value;
+const expiryDate=document.getElementById("expiryDate").value;
+
+if(publishDate&&expiryDate&&expiryDate<publishDate){
+showMessage("Expiry Date, Publish Date કરતાં પહેલાં ન હોવી જોઈએ.");
+return;
+}
+
+const data={
+titleGu:document.getElementById("titleGu").value.trim(),
+titleEn:document.getElementById("titleEn").value.trim(),
+descriptionGu:document.getElementById("descriptionGu").value.trim(),
+descriptionEn:document.getElementById("descriptionEn").value.trim(),
+category:document.getElementById("category").value,
+status:document.getElementById("status").value,
+important:document.getElementById("important").checked,
+publishDate:publishDate,
+expiryDate:expiryDate,
+pdfUrl:pdfUrl,
+updatedAt:serverTimestamp()
+};
+
+if(data.status==="published"&&!publishDate){
+showMessage("Publish Date પસંદ કરો.");
+return;
+}
+
+const saveButton=document.getElementById("saveButton");
+saveButton.disabled=true;
+
+try{
+if(id){
+await updateDoc(doc(db,"Notices",id),data);
+showMessage("Notice સફળતાપૂર્વક Update થઈ.");
+}else{
+data.createdAt=serverTimestamp();
+data.createdBy=currentUser.uid;
+await addDoc(collection(db,"Notices"),data);
+showMessage("નવી Notice સફળતાપૂર્વક Save થઈ.");
+}
+resetForm();
+await loadNotices();
+}catch(error){
+showMessage("Save કરવામાં ભૂલ: "+error.message);
+}finally{
+saveButton.disabled=false;
+}
+});
+
+function addText(parent,tag,text,className){
+const el=document.createElement(tag);
+el.textContent=text||"";
+if(className)el.className=className;
+parent.appendChild(el);
+return el;
+}
+
+async function loadNotices(){
+noticeList.textContent="Notices લોડ થઈ રહી છે...";
+try{
+const snapshot=await getDocs(collection(db,"Notices"));
+noticeList.replaceChildren();
+
+if(snapshot.empty){
+noticeList.textContent="હજુ કોઈ Notice ઉપલબ્ધ નથી.";
+return;
+}
+
+const items=snapshot.docs.map(d=>({id:d.id,...d.data()}));
+items.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+
+items.forEach(item=>{
+const card=document.createElement("div");
+card.className="notice";
+
+addText(card,"div",item.status==="published"?"PUBLISHED":"DRAFT","status");
+if(item.important)addText(card,"div","★ IMPORTANT");
+addText(card,"h3",item.titleGu);
+addText(card,"p",item.titleEn);
+addText(card,"p",item.descriptionGu);
+addText(card,"p",item.descriptionEn);
+addText(card,"p","Category: "+(item.category||"General"));
+addText(card,"p","Publish Date: "+(item.publishDate||"—"));
+addText(card,"p","Expiry Date: "+(item.expiryDate||"—"));
+
+if(item.pdfUrl){
+const link=document.createElement("a");
+link.href=item.pdfUrl;
+link.textContent="PDF / Document ખોલો";
+link.target="_blank";
+link.rel="noopener noreferrer";
+card.appendChild(link);
+}
+
+const editButton=document.createElement("button");
+editButton.textContent="Edit";
+editButton.className="edit";
+editButton.addEventListener("click",()=>editNotice(item));
+card.appendChild(editButton);
+
+const deleteButton=document.createElement("button");
+deleteButton.textContent="Delete";
+deleteButton.className="delete";
+deleteButton.addEventListener("click",()=>removeNotice(item.id));
+card.appendChild(deleteButton);
+
+noticeList.appendChild(card);
+});
+}catch(error){
+noticeList.textContent="Notices લોડ થઈ શકી નથી: "+error.message;
+}
+}
+
+function editNotice(item){
+document.getElementById("noticeId").value=item.id;
+document.getElementById("titleGu").value=item.titleGu||"";
+document.getElementById("titleEn").value=item.titleEn||"";
+document.getElementById("descriptionGu").value=item.descriptionGu||"";
+document.getElementById("descriptionEn").value=item.descriptionEn||"";
+document.getElementById("category").value=item.category||"General";
+document.getElementById("status").value=item.status||"draft";
+document.getElementById("publishDate").value=item.publishDate||"";
+document.getElementById("expiryDate").value=item.expiryDate||"";
+document.getElementById("important").checked=!!item.important;
+document.getElementById("pdfUrl").value=item.pdfUrl||"";
+document.getElementById("formHeading").textContent="Notice Edit કરો";
+document.getElementById("saveButton").textContent="Update Notice";
+document.getElementById("cancelEdit").style.display="inline-block";
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function resetForm(){
+document.getElementById("noticeForm").reset();
+document.getElementById("noticeId").value="";
+document.getElementById("formHeading").textContent="નવી Notice ઉમેરો";
+document.getElementById("saveButton").textContent="Notice Save કરો";
+document.getElementById("cancelEdit").style.display="none";
+}
+
+async function removeNotice(id){
+if(!confirm("શું તમે ખરેખર આ Notice Delete કરવા માંગો છો?"))return;
+try{
+await deleteDoc(doc(db,"Notices",id));
+showMessage("Notice Delete થઈ ગઈ.");
+await loadNotices();
+}catch(error){
+showMessage("Delete કરવામાં ભૂલ: "+error.message);
+}
+}
+
+document.getElementById("cancelEdit").addEventListener("click",resetForm);
+document.getElementById("refreshButton").addEventListener("click",loadNotices);
+</script>
 </body>
 </html>
