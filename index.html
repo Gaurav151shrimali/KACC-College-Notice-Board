@@ -1,152 +1,386 @@
+
 <!DOCTYPE html>
 <html lang="gu">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KACC College Notice Board</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KACC College Notice Board</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f6fb;
-      color: #202b3c;
-    }
-
-    header {
-      background: #123d70;
-      color: white;
-      text-align: center;
-      padding: 28px 15px;
-    }
-
-    header h1 {
-      margin: 0 0 10px;
-      font-size: 25px;
-    }
-
-    header p {
-      margin: 5px 0;
-      font-size: 15px;
-    }
-
-    nav {
-      background: white;
-      padding: 14px;
-      text-align: center;
-      border-bottom: 1px solid #ddd;
-    }
-
-    nav button {
-      padding: 9px 18px;
-      margin: 4px;
-      border: 1px solid #123d70;
-      border-radius: 6px;
-      background: white;
-      color: #123d70;
-      cursor: pointer;
-    }
-
-    nav button.active {
-      background: #123d70;
-      color: white;
-    }
-
-    main {
-      max-width: 950px;
-      margin: 28px auto;
-      padding: 0 15px;
-    }
-
-    .notice-heading {
-      font-size: 23px;
-      margin-bottom: 18px;
-    }
-
-    .empty-message {
-      background: white;
-      padding: 35px 20px;
-      text-align: center;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px #0000000d;
-    }
-
-    footer {
-      margin-top: 60px;
-      padding: 20px;
-      background: #123d70;
-      color: white;
-      text-align: center;
-      font-size: 14px;
-    }
-  </style>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;font-family:Arial,sans-serif;
+ background:#f3f7fd;color:#12345c;
+}
+header{
+ background:white;padding:18px 4%;
+ display:flex;align-items:center;justify-content:space-between;
+ gap:15px;flex-wrap:wrap;
+ border-bottom:1px solid #dce7f5;
+}
+.college-title{flex:1;min-width:240px}
+.college-title h1{
+ font-size:clamp(19px,3vw,29px);
+ margin:0 0 8px;color:#092e62;
+}
+.college-title p{margin:0;color:#1762ae;font-weight:bold}
+.lang button{
+ border:1px solid #1762ae;border-radius:25px;
+ padding:10px 18px;background:white;color:#12345c;
+ cursor:pointer;font-size:15px;margin:3px;
+}
+.lang button.active{background:#0753a0;color:white}
+nav{
+ background:#07356f;color:white;padding:13px 4%;
+ display:flex;justify-content:space-between;align-items:center;
+ flex-wrap:wrap;gap:10px;
+}
+nav a{color:white;text-decoration:none;font-weight:bold}
+main{max-width:1200px;margin:25px auto;padding:0 18px}
+.ticker{
+ display:flex;align-items:center;gap:15px;
+ background:#fff0f0;border:1px solid #ff7777;
+ border-radius:13px;padding:12px 15px;
+ overflow:hidden;margin-bottom:30px;
+}
+.ticker-label{
+ background:#d71920;color:white;font-weight:bold;
+ padding:12px 16px;border-radius:25px;white-space:nowrap;
+}
+.ticker-window{overflow:hidden;flex:1;min-width:0}
+.ticker-track{
+ display:flex;width:max-content;
+ animation:scroll 28s linear infinite;
+}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker-text{
+ white-space:nowrap;color:#c51620;font-weight:bold;
+ padding-right:70px;font-size:17px;
+}
+@keyframes scroll{
+ from{transform:translateX(0)}
+ to{transform:translateX(-50%)}
+}
+.section-heading{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;
+}
+.section-heading h2{
+ margin:0;border-left:5px solid #1263b5;
+ padding-left:12px;font-size:25px;
+}
+#noticeList{
+ display:flex;flex-direction:column;gap:15px;
+}
+.notice{
+ background:white;border:1px solid #dce6f3;
+ border-radius:13px;padding:18px;
+ display:grid;grid-template-columns:85px 1fr 150px 145px;
+ align-items:center;gap:16px;
+ box-shadow:0 3px 10px #173c6410;
+ border-left:4px solid #1768c0;
+}
+.notice.important{border-left-color:#e51f2b}
+.notice-icon{
+ background:#eaf2ff;color:#1260b5;
+ border-radius:12px;padding:15px 5px;text-align:center;
+ font-size:27px;
+}
+.notice.important .notice-icon{background:#ffe9eb;color:#d71920}
+.notice-content h3{margin:0 0 8px;font-size:19px}
+.notice-content p{margin:0;color:#425873;line-height:1.6}
+.notice-meta{
+ border-left:1px solid #dce5f1;padding-left:15px;
+ font-size:14px;line-height:2;
+}
+.category{
+ display:inline-block;background:#e8f1ff;color:#1458a0;
+ padding:4px 12px;border-radius:20px;font-weight:bold;
+}
+.notice-link{
+ border-left:1px solid #dce5f1;padding-left:15px;
+}
+.notice-link a{color:#075bb6;font-weight:bold}
+.notice-link a:hover{text-decoration:none}
+.btn{
+ background:#084a91;color:white;border:0;
+ padding:11px 20px;border-radius:25px;
+ cursor:pointer;font-weight:bold;font-size:15px;
+}
+.btn:hover{background:#1269bd}
+#viewAllWrap{text-align:center;margin:25px 0}
+#message{text-align:center;padding:35px;color:#60758e}
+footer{
+ margin-top:40px;text-align:center;
+ background:#07356f;color:white;padding:22px 10px;
+}
+@media(max-width:760px){
+ .notice{grid-template-columns:65px 1fr;gap:12px}
+ .notice-meta,.notice-link{
+  grid-column:2;border-left:0;padding-left:0;
+ }
+ .notice-icon{grid-row:1 / span 2}
+ .section-heading h2{font-size:21px}
+ .ticker-label{font-size:13px;padding:10px}
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <h1>શ્રીમતી કે. કે. શાહ આર્ટ્સ અને શ્રીમતી એલ. બી. ગુંજરીયા કોમર્સ કોલેજ</h1>
-    <p>થરા</p>
-    <p>KACC College - Official Notice Board</p>
-  </header>
+<header>
+ <div class="college-title">
+  <h1>શ્રીમતી કે. કે. શાહ આર્ટ્સ અને શ્રીમતી એલ. બી. ગુંજરીયા કોમર્સ કોલેજ, થરા</h1>
+  <p>Shrimati K. K. Shah Arts & Shrimati L. B. Gunjariya Commerce College, Thara</p>
+ </div>
+ <div class="lang">
+  <button id="guBtn" class="active" onclick="changeLanguage('gu')">ગુજરાતી</button>
+  <button id="enBtn" onclick="changeLanguage('en')">English</button>
+ </div>
+</header>
 
-  <nav>
-    <button class="active" id="guBtn" onclick="setLanguage('gu')">
-      ગુજરાતી
-    </button>
+<nav>
+ <a href="./">⌂ <span data-gu="હોમ" data-en="Home">હોમ</span></a>
+ <span>🔔 <span data-gu="નોટિસ બોર્ડ" data-en="Notice Board">નોટિસ બોર્ડ</span></span>
+ <span id="today"></span>
+</nav>
 
-    <button id="enBtn" onclick="setLanguage('en')">
-      English
-    </button>
-  </nav>
+<main>
 
-  <main>
-    <h2 class="notice-heading" id="pageHeading">
-      કોલેજની સૂચનાઓ
-    </h2>
+ <div class="ticker">
+  <div class="ticker-label">📢 <span data-gu="મહત્વપૂર્ણ નોટિસ" data-en="Important Notice">મહત્વપૂર્ણ નોટિસ</span></div>
+  <div class="ticker-window">
+   <div class="ticker-track" id="tickerTrack">
+    <span class="ticker-text">હાલમાં કોઈ મહત્વપૂર્ણ નોટિસ ઉપલબ્ધ નથી.</span>
+    <span class="ticker-text">હાલમાં કોઈ મહત્વપૂર્ણ નોટિસ ઉપલબ્ધ નથી.</span>
+   </div>
+  </div>
+ </div>
 
-    <section class="empty-message">
-      <h3 id="emptyTitle">સૂચનાઓ ટૂંક સમયમાં અહીં મૂકવામાં આવશે.</h3>
-      <p id="emptyText">
-        કોલેજની નવીનતમ સૂચનાઓ માટે આ પેજની મુલાકાત લેતા રહો.
-      </p>
-    </section>
-  </main>
+ <div class="section-heading">
+  <h2 data-gu="નવીનતમ નોટિસ" data-en="Latest Notices">નવીનતમ નોટિસ</h2>
+  <span id="noticeCount"></span>
+ </div>
 
-  <footer>
-    <p>© Shrimati K. K. Shah Arts & Shrimati L. B. Gunjariya Commerce College, Thara</p>
-  </footer>
+ <div id="noticeList">
+  <div id="message">નોટિસ લોડ થઈ રહી છે...</div>
+ </div>
 
-  <script>
-    function setLanguage(language) {
-      const guBtn = document.getElementById("guBtn");
-      const enBtn = document.getElementById("enBtn");
+ <div id="viewAllWrap" style="display:none">
+  <button class="btn" id="viewAllBtn" onclick="toggleAll()">
+   View All Notices →
+  </button>
+ </div>
 
-      if (language === "en") {
-        document.getElementById("pageHeading").textContent = "College Notices";
-        document.getElementById("emptyTitle").textContent =
-          "Notices will be published here soon.";
-        document.getElementById("emptyText").textContent =
-          "Please visit this page regularly for the latest college notices.";
+</main>
 
-        enBtn.classList.add("active");
-        guBtn.classList.remove("active");
-      } else {
-        document.getElementById("pageHeading").textContent = "કોલેજની સૂચનાઓ";
-        document.getElementById("emptyTitle").textContent =
-          "સૂચનાઓ ટૂંક સમયમાં અહીં મૂકવામાં આવશે.";
-        document.getElementById("emptyText").textContent =
-          "કોલેજની નવીનતમ સૂચનાઓ માટે આ પેજની મુલાકાત લેતા રહો.";
+<footer>
+ © <span id="year"></span> KACC College, Thara
+ <br><br>
+ Education • Empowerment • Excellence
+</footer>
 
-        guBtn.classList.add("active");
-        enBtn.classList.remove("active");
-      }
-    }
-  </script>
+<script type="module">
+import { db } from "./firebase-config.js";
+import {
+ collection, getDocs
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+let allNotices = [];
+let language = "gu";
+let showAll = false;
+
+const list = document.getElementById("noticeList");
+const ticker = document.getElementById("tickerTrack");
+
+document.getElementById("year").textContent = new Date().getFullYear();
+
+document.getElementById("today").textContent =
+ new Date().toLocaleDateString("en-IN", {
+  day:"2-digit",month:"short",year:"numeric"
+ });
+
+function dateValue(value){
+ if(!value) return "";
+ if(typeof value === "string") return value;
+ if(value.toDate) return value.toDate().toISOString().slice(0,10);
+ return "";
+}
+
+function displayDate(value){
+ if(!value) return "";
+ const d = new Date(value + "T00:00:00");
+ if(isNaN(d)) return value;
+ return d.toLocaleDateString(language === "gu" ? "gu-IN" : "en-IN", {
+  day:"2-digit",month:"short",year:"numeric"
+ });
+}
+
+function safeLink(url){
+ try{
+  const u = new URL(url);
+  return u.protocol === "https:" ? u.href : "";
+ }catch(e){return "";}
+}
+
+function field(n, gu, en){
+ return language === "gu"
+  ? (n[gu] || n[en] || "")
+  : (n[en] || n[gu] || "");
+}
+
+function renderTicker(){
+ const important = allNotices.filter(n => n.important === true);
+ const messages = important.map(n => field(n,"titleGu","titleEn"));
+ const fallback = language === "gu"
+  ? "હાલમાં કોઈ મહત્વપૂર્ણ નોટિસ ઉપલબ્ધ નથી."
+  : "No important notices available currently.";
+
+ const text = messages.length ? messages.join("     •     ") : fallback;
+ ticker.replaceChildren();
+
+ for(let i=0;i<2;i++){
+  const span=document.createElement("span");
+  span.className="ticker-text";
+  span.textContent=text;
+  ticker.appendChild(span);
+ }
+}
+
+function renderNotices(){
+ list.replaceChildren();
+
+ const shown = showAll ? allNotices : allNotices.slice(0,5);
+
+ if(!shown.length){
+  const msg=document.createElement("div");
+  msg.id="message";
+  msg.textContent=language==="gu"
+   ? "હાલમાં કોઈ નોટિસ ઉપલબ્ધ નથી."
+   : "No notices are currently available.";
+  list.appendChild(msg);
+ }
+
+ shown.forEach(n=>{
+  const card=document.createElement("article");
+  card.className="notice"+(n.important ? " important" : "");
+
+  const icon=document.createElement("div");
+  icon.className="notice-icon";
+  icon.textContent=n.important ? "★" : "🔔";
+
+  const content=document.createElement("div");
+  content.className="notice-content";
+
+  const title=document.createElement("h3");
+  title.textContent=field(n,"titleGu","titleEn");
+
+  const description=document.createElement("p");
+  description.textContent=field(n,"descriptionGu","descriptionEn");
+
+  content.append(title,description);
+
+  const meta=document.createElement("div");
+  meta.className="notice-meta";
+
+  const date=document.createElement("div");
+  date.textContent="📅 "+displayDate(dateValue(n.publishDate));
+
+  const category=document.createElement("span");
+  category.className="category";
+  category.textContent=n.category || "General";
+
+  meta.append(date,category);
+
+  const linkBox=document.createElement("div");
+  linkBox.className="notice-link";
+
+  const url=safeLink(n.pdfUrl);
+  if(url){
+   const a=document.createElement("a");
+   a.href=url;
+   a.target="_blank";
+   a.rel="noopener noreferrer";
+   a.textContent=language==="gu" ? "📄 PDF ડાઉનલોડ" : "📄 Download PDF";
+   linkBox.appendChild(a);
+  }else{
+   linkBox.textContent=language==="gu" ? "નોટિસ" : "Notice";
+  }
+
+  card.append(icon,content,meta,linkBox);
+  list.appendChild(card);
+ });
+
+ document.getElementById("noticeCount").textContent =
+  allNotices.length + (language==="gu" ? " નોટિસ" : " Notices");
+
+ const wrap=document.getElementById("viewAllWrap");
+ wrap.style.display=allNotices.length>5 ? "block" : "none";
+
+ document.getElementById("viewAllBtn").textContent =
+  showAll
+   ? (language==="gu" ? "ઓછી નોટિસ જુઓ ↑" : "Show Less ↑")
+   : (language==="gu" ? "બધી નોટિસ જુઓ →" : "View All Notices →");
+
+ renderTicker();
+}
+
+window.toggleAll = function(){
+ showAll=!showAll;
+ renderNotices();
+};
+
+window.changeLanguage = function(lang){
+ language=lang;
+ document.documentElement.lang=lang;
+ document.getElementById("guBtn").classList.toggle("active",lang==="gu");
+ document.getElementById("enBtn").classList.toggle("active",lang==="en");
+
+ document.querySelectorAll("[data-gu]").forEach(el=>{
+  el.textContent=el.dataset[lang];
+ });
+ renderNotices();
+};
+
+async function loadNotices(){
+ try{
+  const snapshot=await getDocs(collection(db,"Notices"));
+  const today=new Date().toISOString().slice(0,10);
+
+  allNotices=snapshot.docs.map(doc=>({
+   id:doc.id,...doc.data()
+  })).filter(n=>{
+   if(n.status!=="published") return false;
+
+   const publish=dateValue(n.publishDate);
+   const expiry=dateValue(n.expiryDate);
+
+   if(publish && publish>today) return false;
+   if(expiry && expiry<today) return false;
+
+   return !!(n.titleGu || n.titleEn);
+  });
+
+  allNotices.sort((a,b)=>{
+   const da=dateValue(a.publishDate);
+   const db=dateValue(b.publishDate);
+   return db.localeCompare(da);
+  });
+
+  renderNotices();
+
+ }catch(error){
+  console.error(error);
+  list.replaceChildren();
+  const msg=document.createElement("div");
+  msg.id="message";
+  msg.textContent="નોટિસ લોડ થઈ શકી નથી. Please try again later.";
+  list.appendChild(msg);
+ }
+}
+
+loadNotices();
+</script>
 
 </body>
 </html>
