@@ -183,7 +183,7 @@ footer{
 <script type="module">
 import { db } from "./firebase-config.js";
 import {
- collection, getDocs
+ collection, getDocs, query, where
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
 let allNotices = [];
@@ -344,7 +344,9 @@ window.changeLanguage = function(lang){
 
 async function loadNotices(){
  try{
-  const snapshot=await getDocs(collection(db,"Notices"));
+const snapshot=await getDocs(
+ query(collection(db,"Notices"),where("status","==","published"))
+);
   const today=new Date().toISOString().slice(0,10);
 
   allNotices=snapshot.docs.map(doc=>({
